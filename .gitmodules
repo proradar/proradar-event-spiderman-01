@@ -1,0 +1,15 @@
+[submodule "uuid-service"]
+	path = uuid-service
+	url = https://github.com/joeelliot/saifi-event-uuid-01.git
+[submodule "certificate-service"]
+	path = certificate-service
+	url = https://github.com/joeelliot/saifi-event-certificate-01.git
+[submodule "transaction-service"]
+	path = transaction-service
+	url = https://github.com/joeelliot/saifi-event-nemsimulator-01.git
+[submodule "user-service"]
+	path = user-service
+	url = https://github.com/joeelliot/saifi-event-user-01.git
+[submodule "api-gateway"]
+	path = api-gateway
+	url = https://github.com/joeelliot/saifi-event-apigateway-01.git

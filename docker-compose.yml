@@ -1,0 +1,94 @@
+version: '2'
+services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - 172.17.0.1:8080:8080
+    volumes:
+      - ./api-gateway:/usr/src/api/api-gateway
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - uuid
+      - certificate
+      - transaction
+    network_mode: bridge
+  uuid:
+    build: ./uuid-service
+    labels:
+      - "apiRoute=/tags"
+    environment:
+      APP_NAME: uuid-service
+      DB_NAME: uuid
+    extends:
+      file: base.yml
+      service: base
+    ports:
+      - 172.17.0.1:3030:3030
+    volumes:
+      - ./uuid-service:/usr/src/api/uuid-service
+    depends_on:
+      - postgresdb
+    restart: always
+  certificate:
+    build: ./certificate-service
+    labels:
+      - "apiRoute=/certificates"
+    environment:
+      APP_NAME: certificate-service
+      DB_NAME: certificates
+    extends:
+      file: base.yml
+      service: base
+    ports:
+      - 172.17.0.1:3031:3030
+    volumes:
+      - ./certificate-service:/usr/src/api/certificate-service
+    depends_on:
+      - postgresdb
+    restart: always
+  transaction:
+    build: ./transaction-service
+    labels:
+      - "apiRoute=/assets,/activities"
+    environment:
+      APP_NAME: transaction-service
+      DB_NAME: transactions
+    extends:
+      file: base.yml
+      service: base
+    ports:
+      - 172.17.0.1:3032:3030
+    volumes:
+      - ./transaction-service:/usr/src/api/transaction-service
+    depends_on:
+      - postgresdb
+    restart: always
+  user:
+    build: ./user-service
+    labels:
+      - "apiRoute=/"
+    environment:
+      APP_NAME: user-service
+      DB_NAME: users
+    extends:
+      file: base.yml
+      service: base
+    ports:
+      - 172.17.0.1:1337:1337
+    volumes:
+      - ./user-service:/usr/src/api/user-service
+      - /data/uploads:/home/node/app/public/uploads
+    depends_on:
+      - postgresdb
+    restart: always
+  postgresdb:
+    image: postgres
+    restart: always
+    volumes:
+      - /data/postgres:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 172.17.0.1:5432:5432
+    environment:
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pguser

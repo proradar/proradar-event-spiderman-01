@@ -1,0 +1,9 @@
+version: '2'
+services:
+  base:
+    environment:
+      DB_HOST: 172.17.0.1
+      DB_PORT: 5432
+      DB_USER: luxtag_user
+      DB_PASS: luxtag!23#
+      JWT_SECRET: 2e980540-06f0-44e0-a742-73c84fd259e2
