@@ -11,6 +11,7 @@ services:
       - uuid
       - certificate
       - transaction
+      - product
     network_mode: bridge
   uuid:
     build: ./uuid-service
@@ -60,6 +61,23 @@ services:
       - 172.17.0.1:3032:3030
     volumes:
       - ./transaction-service:/usr/src/api/transaction-service
+    depends_on:
+      - postgresdb
+    restart: always
+  product:
+    build: ./product-service
+    labels:
+      - "apiRoute=/products"
+    environment:
+      APP_NAME: product-service
+      DB_NAME: products
+    extends:
+      file: base.yml
+      service: base
+    ports:
+      - 172.17.0.1:3033:3030
+    volumes:
+      - ./product-service:/usr/src/api/product-service
     depends_on:
       - postgresdb
     restart: always
