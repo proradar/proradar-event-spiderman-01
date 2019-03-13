@@ -81,6 +81,23 @@ services:
     depends_on:
       - postgresdb
     restart: always
+  track:
+    build: ./track-service
+    labels:
+      - "apiRoute=/track"
+    environment:
+      APP_NAME: track-service
+      DB_NAME: tracks
+    extends:
+      file: base.yml
+      service: base
+    ports:
+      - 172.17.0.1:3034:3030
+    volumes:
+      - ./track-service:/usr/src/api/track-service
+    depends_on:
+      - postgresdb
+    restart: always
   user:
     build: ./user-service
     labels:

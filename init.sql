@@ -6,8 +6,10 @@ create database transactions;
 create database uuid;
 create database certificates;
 create database users;
+create database tracks;
 
 GRANT ALL PRIVILEGES ON DATABASE transactions TO luxtag_user;
 GRANT ALL PRIVILEGES ON DATABASE uuid TO luxtag_user;
 GRANT ALL PRIVILEGES ON DATABASE certificates TO luxtag_user;
 GRANT ALL PRIVILEGES ON DATABASE users TO luxtag_user;
+GRANT ALL PRIVILEGES ON DATABASE tracks TO luxtag_user;

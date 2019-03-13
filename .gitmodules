@@ -16,3 +16,6 @@
 [submodule "product-service"]
 	path = product-service
 	url = https://github.com/joeelliot/saifi-event-product-01.git
+[submodule "track-service"]
+	path = track-service
+	url = https://github.com/joeelliot/saifi-event-track-01.git
