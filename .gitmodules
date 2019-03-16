@@ -19,3 +19,6 @@
 [submodule "track-service"]
 	path = track-service
 	url = https://github.com/joeelliot/saifi-event-track-01.git
+[submodule "geoip-service"]
+	path = geoip-service
+	url = https://github.com/joeelliot/proradar-event-geoip-01.git

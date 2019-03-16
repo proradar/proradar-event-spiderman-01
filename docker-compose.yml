@@ -98,6 +98,23 @@ services:
     depends_on:
       - postgresdb
     restart: always
+  geoip:
+    build: ./geoip-service
+    labels:
+      - "apiRoute=/geoip"
+    environment:
+      APP_NAME: geoip-service
+      DB_NAME: geoip
+    extends:
+      file: base.yml
+      service: base
+    ports:
+      - 172.17.0.1:3035:3030
+    volumes:
+      - ./geoip-service:/usr/src/api/geoip-service
+    depends_on:
+      - postgresdb
+    restart: always
   user:
     build: ./user-service
     labels:
