@@ -3,15 +3,12 @@ services:
   api-gateway:
     build: ./api-gateway
     ports:
-      - 172.17.0.1:8080:8080
+      - 8080:8080
     volumes:
       - ./api-gateway:/usr/src/api/api-gateway
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - uuid
-      - certificate
-      - transaction
-      - product
     network_mode: bridge
   uuid:
     build: ./uuid-service
@@ -24,60 +21,9 @@ services:
       file: base.yml
       service: base
     ports:
-      - 172.17.0.1:3030:3030
+      - 3030:3030
     volumes:
       - ./uuid-service:/usr/src/api/uuid-service
-    depends_on:
-      - postgresdb
-    restart: always
-  certificate:
-    build: ./certificate-service
-    labels:
-      - "apiRoute=/certificates"
-    environment:
-      APP_NAME: certificate-service
-      DB_NAME: certificates
-    extends:
-      file: base.yml
-      service: base
-    ports:
-      - 172.17.0.1:3031:3030
-    volumes:
-      - ./certificate-service:/usr/src/api/certificate-service
-    depends_on:
-      - postgresdb
-    restart: always
-  transaction:
-    build: ./transaction-service
-    labels:
-      - "apiRoute=/assets,/activities"
-    environment:
-      APP_NAME: transaction-service
-      DB_NAME: transactions
-    extends:
-      file: base.yml
-      service: base
-    ports:
-      - 172.17.0.1:3032:3030
-    volumes:
-      - ./transaction-service:/usr/src/api/transaction-service
-    depends_on:
-      - postgresdb
-    restart: always
-  product:
-    build: ./product-service
-    labels:
-      - "apiRoute=/products"
-    environment:
-      APP_NAME: product-service
-      DB_NAME: products
-    extends:
-      file: base.yml
-      service: base
-    ports:
-      - 172.17.0.1:3033:3030
-    volumes:
-      - ./product-service:/usr/src/api/product-service
     depends_on:
       - postgresdb
     restart: always
@@ -92,29 +38,131 @@ services:
       file: base.yml
       service: base
     ports:
-      - 172.17.0.1:3034:3030
+      - 3031:3030
     volumes:
       - ./track-service:/usr/src/api/track-service
     depends_on:
       - postgresdb
     restart: always
-  geoip:
-    build: ./geoip-service
+  # doby-user:
+  #   build: ./doby-user-service
+  #   labels:
+  #     - "apiRoute=/dobyUser"
+  #   environment:
+  #     APP_NAME: doby-user-service
+  #     DB_NAME: doby
+  #   extends:
+  #     file: base.yml
+  #     service: base
+  #   ports:
+  #     - 3034:3030
+  #   volumes:
+  #     - ./doby-user-service:/usr/src/api/doby-user-service
+  #   depends_on:
+  #     - postgresdb
+  #   restart: always
+  doby-merchant:
+    build: ./doby-merchant-service
     labels:
-      - "apiRoute=/geoip"
+      - "apiRoute=/dobyMerchant"
     environment:
-      APP_NAME: geoip-service
-      DB_NAME: geoip
+      APP_NAME: doby-merchant-service
+      DB_NAME: doby
     extends:
       file: base.yml
       service: base
     ports:
-      - 172.17.0.1:3035:3030
+      - 3033:3030
     volumes:
-      - ./geoip-service:/usr/src/api/geoip-service
+      - ./doby-merchant-service:/usr/src/api/doby-merchant-service
     depends_on:
       - postgresdb
     restart: always
+  doby-jevil:
+    build: ./doby-jevil-service
+    labels:
+      - "apiRoute=/dobyUser"
+    environment:
+      APP_NAME: doby-jevil-service
+      DB_NAME: doby
+    extends:
+      file: base.yml
+      service: base
+    ports:
+      - 3032:3030
+    volumes:
+      - ./doby-jevil-service:/usr/src/api/doby-jevil-service
+    depends_on:
+      - postgresdb
+    restart: always
+  # certificate:
+  #   build: ./certificate-service
+  #   labels:
+  #     - "apiRoute=/certificates"
+  #   environment:
+  #     APP_NAME: certificate-service
+  #     DB_NAME: certificates
+  #   extends:
+  #     file: base.yml
+  #     service: base
+  #   ports:
+  #     - 172.17.0.1:3031:3030
+  #   volumes:
+  #     - ./certificate-service:/usr/src/api/certificate-service
+  #   depends_on:
+  #     - postgresdb
+  #   restart: always
+  # transaction:
+  #   build: ./transaction-service
+  #   labels:
+  #     - "apiRoute=/assets,/activities"
+  #   environment:
+  #     APP_NAME: transaction-service
+  #     DB_NAME: transactions
+  #   extends:
+  #     file: base.yml
+  #     service: base
+  #   ports:
+  #     - 172.17.0.1:3032:3030
+  #   volumes:
+  #     - ./transaction-service:/usr/src/api/transaction-service
+  #   depends_on:
+  #     - postgresdb
+  #   restart: always
+  # product:
+  #   build: ./product-service
+  #   labels:
+  #     - "apiRoute=/products"
+  #   environment:
+  #     APP_NAME: product-service
+  #     DB_NAME: products
+  #   extends:
+  #     file: base.yml
+  #     service: base
+  #   ports:
+  #     - 172.17.0.1:3033:3030
+  #   volumes:
+  #     - ./product-service:/usr/src/api/product-service
+  #   depends_on:
+  #     - postgresdb
+  #   restart: always
+  # geoip:
+  #   build: ./geoip-service
+  #   labels:
+  #     - "apiRoute=/geoip"
+  #   environment:
+  #     APP_NAME: geoip-service
+  #     DB_NAME: geoip
+  #   extends:
+  #     file: base.yml
+  #     service: base
+  #   ports:
+  #     - 172.17.0.1:3035:3030
+  #   volumes:
+  #     - ./geoip-service:/usr/src/api/geoip-service
+  #   depends_on:
+  #     - postgresdb
+    # restart: always
   user:
     build: ./user-service
     labels:
@@ -126,7 +174,7 @@ services:
       file: base.yml
       service: base
     ports:
-      - 172.17.0.1:1337:1337
+      - 1337:1337
     volumes:
       - ./user-service:/usr/src/api/user-service
       - /data/uploads:/home/node/app/public/uploads
@@ -137,10 +185,10 @@ services:
     image: postgres
     restart: always
     volumes:
-      - /data/postgres:/var/lib/postgresql/data
+      - /var/lib/docker/data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - 172.17.0.1:5432:5432
+      - 5432:5432
     environment:
       POSTGRES_USER: pguser
       POSTGRES_PASSWORD: pguser
